@@ -27,6 +27,7 @@ public class Program
     {
         // Create the service this program depends on.
         DataService dataService = new DataService();
+        AverageService average = new AverageService();
 
         // Ask the service for the data. "await" pauses here until the data is ready.
         var groups = await dataService.GetGroupRanksAsync();
@@ -42,5 +43,21 @@ public class Program
 
         // YOUR TURN: Rank each group from first to last place.
         // Decide what "fair" means before you start writing code!
+        groups = average.Average();
+
+        for (int i = 1; i < groups.Count; i++)
+        {
+            if (groups[i].Average < groups[i - 1].Average)
+            {
+                var temp = groups[i];
+                groups[i] = groups[i - 1];
+                groups[i - 1] = temp;
+            }
+        }
+
+        for (int i = 0; i < groups.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}. {groups[i].Name} - Average: {groups[i].Average}");
+        }
     }
 }
